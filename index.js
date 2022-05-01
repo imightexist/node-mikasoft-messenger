@@ -4,12 +4,13 @@ const ws = new WebSocket();
 module.exports = class {
     constructor() {
         //this.name = name;
-        this.f = "how else do i declare a variable???";
+        this.name = "how else do i declare a variable???";
+        this.connected = false;
     }
     send = function (text) {
         ws.once('connect', function (f) {
             f.sendUTF(JSON.stringify({
-                name: this.f,
+                name: this.name,
                 msg: text
             }));
         })
@@ -21,12 +22,14 @@ module.exports = class {
                 msg: "joined :D",
                 name: n
             }));
-            this.f = n;
+            this.name = n;
+            this.connected = true;
         })
+        
     }
     onMsg = function (callback) {
-        
         ws.once('connect',function(f){
+            let name = this.name;
             f.on('message',function(msg){
                 //console.log(msg.utf8Data);
                 /*
@@ -38,9 +41,15 @@ module.exports = class {
                     return;
                 }
                 */
+                let sendshit = function(text){
+                    f.sendUTF(JSON.stringify({
+                        name: name,
+                        msg: text
+                    }));
+                }
                 if (!(msg.utf8Data.startsWith("user "))){
                     let cmd = JSON.parse(msg.utf8Data);
-                    callback(cmd.msg,cmd.name);
+                    callback(cmd.msg,cmd.name,sendshit);
                 }
             })
         })
