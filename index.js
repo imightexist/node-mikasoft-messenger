@@ -16,7 +16,7 @@ module.exports = class {
         })
     }
     connect = function (n) {
-        ws.connect("ws://104.192.2.35:1999");
+        ws.connect("ws://collabhost.computernewb.com/mikasoft/chat/");
         ws.once('connect', function (cool) {
             cool.sendUTF(JSON.stringify({
                 msg: "joined :D",
